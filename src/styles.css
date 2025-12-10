@@ -127,11 +127,14 @@ ha-card {
 }
 
 .vacuum {
+  width: 24px;
+  height: 24px;
+  margin: 0px;
+  padding: 0px;
   display: block;
   max-width: 90%;
   max-height: 200px;
   image-rendering: crisp-edges;
-  margin: var(--vc-spacing) auto;
   cursor: pointer;
   filter: brightness(0.9);
 }
@@ -173,11 +176,12 @@ ha-card {
 }
 
 .status-text {
+  margin: 0px;
+  padding: 0px;
   color: var(--vc-secondary-text-color);
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  margin-left: calc(28px + var(--vc-spacing)); /* size + margin of spinner */
 }
 
 .status mwc-circular-progress {
