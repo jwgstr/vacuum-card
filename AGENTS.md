@@ -25,6 +25,18 @@
 - Linting: ESLint (see `eslint.config.mjs`) using `@typescript-eslint` and `eslint-plugin-import`.
 - Match existing patterns in `src/` for file naming and exports; prefer descriptive, kebab-case filenames for components.
 
+## Technologies Used
+
+- UI is a Home Assistant Lovelace custom card implemented as a Web Component with Lit (`LitElement`, decorators, `html` templates).
+- Home Assistant integrations use `custom-card-helpers` for card lifecycle/events and `home-assistant-js-websocket` types for entities/services.
+- Template rendering uses `ha-template` for dynamic text in the card.
+- Localization is handled via JSON translation files in `src/translations/` and the `localize` helper.
+- Build tooling is Rollup with TypeScript (`rollup-plugin-typescript2`), Babel transforms, and asset handling for JSON, images, CSS, and SVG.
+- Styling uses PostCSS (`postcss-preset-env`) and `rollup-plugin-postcss-lit` to process component CSS.
+- Production optimizations include HTML literal minification and Terser.
+- Utility helpers include Lodash (`get`).
+- Developer tooling includes ESLint, Prettier, Husky, and lint-staged.
+
 ## Testing Guidelines
 
 - No dedicated test framework is configured.
