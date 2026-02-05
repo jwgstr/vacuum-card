@@ -1,9 +1,12 @@
 :host {
-  --vc-background: transparent;
+  --vc-background: var(
+    --ha-card-background,
+    var(--card-background-color, transparent)
+  );
   --vc-primary-text-color: var(--primary-text-color);
   --vc-secondary-text-color: var(--secondary-text-color);
   --vc-icon-color: var(--secondary-text-color);
-  --vc-toolbar-background: var(--vc-background);
+  --vc-toolbar-background: transparent;
   --vc-toolbar-text-color: var(--secondary-text-color);
   --vc-toolbar-icon-color: var(--secondary-text-color);
   --vc-divider-color: var(--entities-divider-color, var(--divider-color));
@@ -15,6 +18,7 @@
 }
 
 ha-card {
+  background: var(--vc-background);
   flex-direction: column;
   flex: 1;
   position: relative;
@@ -22,7 +26,6 @@ ha-card {
 }
 
 .preview {
-  background: var(--vc-background);
   position: relative;
   text-align: center;
 
@@ -45,6 +48,15 @@ ha-card {
 
   & .tip {
     cursor: pointer;
+
+    & ha-icon {
+      --mdc-icon-size: 18px;
+    }
+  }
+
+  & .tip-title {
+    display: inline-block;
+    vertical-align: middle;
   }
 }
 
@@ -170,6 +182,7 @@ ha-card {
   align-items: center;
   justify-content: center;
   direction: ltr;
+  gap: var(--vc-spacing);
 }
 
 .status-text {
@@ -181,9 +194,8 @@ ha-card {
   overflow: hidden;
 }
 
-.status mwc-circular-progress {
-  --mdc-theme-primary: var(--vc-secondary-text-color) !important;
-  margin-left: var(--vc-spacing);
+.status .status-spinner {
+  --ha-spinner-color: var(--vc-secondary-text-color);
 }
 
 .vacuum-name {
@@ -269,10 +281,4 @@ ha-icon {
 .toolbar ha-icon {
   color: var(--vc-toolbar-icon-color);
   display: flex;
-}
-
-.icon-title {
-  display: inline-block;
-  vertical-align: middle;
-  padding: 0 3px;
 }

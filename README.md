@@ -34,7 +34,6 @@ Just search for `Vacuum Card` in plugins tab.
 1. Download `vacuum-card.js` file from the [latest-release].
 2. Put `vacuum-card.js` file into your `config/www` folder.
 3. Add reference to `vacuum-card.js` in Lovelace. There's two way to do that:
-
    1. **Using UI:** _Configuration_ → _Lovelace Dashboards_ → _Resources Tab_ → Click Plus button → Set _Url_ as `/local/vacuum-card.js` → Set _Resource type_ as `JavaScript Module`.
       **Note:** If you do not see the Resources Tab, you will need to enable _Advanced Mode_ in your _User Profile_
    2. **Using YAML:** Add following code to `lovelace` section.
@@ -111,6 +110,7 @@ Here is what every option means:
 | ---------------- | :-------: | ------------ | --------------------------------------------------------------------------------------------------------- |
 | `type`           | `string`  | **Required** | `custom:vacuum-card`                                                                                      |
 | `entity`         | `string`  | **Required** | An entity_id within the `vacuum` domain.                                                                  |
+| `battery_entity` | `string`  | Optional     | An entity_id within the `sensor` domain to display battery state and icon.                                |
 | `map`            | `string`  | Optional     | An entity_id within the `camera` domain, for streaming live vacuum map.                                   |
 | `map_refresh`    | `integer` | `5`          | Update interval for map camera in seconds                                                                 |
 | `image`          | `string`  | `default`    | Path to image of your vacuum cleaner. Better to have `png` or `svg`.                                      |
@@ -121,7 +121,6 @@ Here is what every option means:
 | `stats`          | `object`  | Optional     | Custom per state stats for your vacuum cleaner                                                            |
 | `actions`        | `object`  | Optional     | Override default actions behavior with service invocations.                                               |
 | `shortcuts`      |  `array`  | Optional     | List of shortcuts shown at the right bottom part of the card with custom actions for your vacuum cleaner. |
-| `battery_sensor` | `object`  | Optional     | Override battery display with a specific sensor entity instead of vacuum entity attributes.               |
 
 ### `stats` object
 
@@ -139,38 +138,38 @@ You can use any attribute of vacuum or even any entity by `entity_id` to display
 
 You can defined service invocations to override default actions behavior. Available actions to override are `start`, `pause`, `resume`, `stop`, `locate` and `return_to_base`.
 
-| Name           |   Type   | Default                           | Description                                     |
-| -------------- | :------: | --------------------------------- | ----------------------------------------------- |
-| `service`      | `string` | Optional                          | A service to call, i.e. `script.clean_bedroom`. |
-| `service_data` | `object` | `service_data` for `service` call |
+| Name           |   Type   | Default  | Description                                     |
+| -------------- | :------: | -------- | ----------------------------------------------- |
+| `service`      | `string` | Optional | A service to call, i.e. `script.clean_bedroom`. |
+| `service_data` | `object` | Optional | `service_data` for `service` call               |
 
 ### `shortcuts` object
 
 You can defined [custom scripts][ha-scripts] for custom actions i.e cleaning specific room and add them to this card with `shortcuts` option.
 
-| Name           |   Type   | Default                           | Description                                                             |
-| -------------- | :------: | --------------------------------- | ----------------------------------------------------------------------- |
-| `name`         | `string` | Optional                          | Friendly name of the action, i.e. `Clean bedroom`.                      |
-| `service`      | `string` | Optional                          | A service to call, i.e. `script.clean_bedroom`.                         |
-| `target`       | `object` | Optional                          | A `HassServiceTarget`, to define a target for the current service call. |
-| `icon`         | `string` | Optional                          | Any icon for action button.                                             |
-| `service_data` | `object` | `service_data` for `service` call |
+| Name           |   Type   | Default  | Description                                                             |
+| -------------- | :------: | -------- | ----------------------------------------------------------------------- |
+| `name`         | `string` | Optional | Friendly name of the action, i.e. `Clean bedroom`.                      |
+| `service`      | `string` | Optional | A service to call, i.e. `script.clean_bedroom`.                         |
+| `target`       | `object` | Optional | A `HassServiceTarget`, to define a target for the current service call. |
+| `icon`         | `string` | Optional | Any icon for action button.                                             |
+| `service_data` | `object` | Optional | `service_data` for `service` call                                       |
 
 ## Theming
 
 This card can be styled by changing the values of these CSS properties (globally or per-card via [`card-mod`][card-mod]):
 
-| Variable                    | Default value                                         | Description                          |
-| --------------------------- | ----------------------------------------------------- | ------------------------------------ |
-| `--vc-background`           | `transparent`                                         | Background of the card               |
-| `--vc-primary-text-color`   | `var(--primary-text-color)`                           | Vacuum name, stats values, etc       |
-| `--vc-secondary-text-color` | `var(--secondary-text-color)`                         | Status, stats units and titles, etc  |
-| `--vc-icon-color`           | `var(--secondary-text-color)`                         | Colors of icons                      |
-| `--vc-toolbar-background`   | `var(--vc-background)`                                | Background of the toolbar            |
-| `--vc-toolbar-text-color`   | `var(--secondary-text-color)`                         | Color of the toolbar texts           |
-| `--vc-toolbar-icon-color`   | `var(--secondary-text-color)`                         | Color of the toolbar icons           |
-| `--vc-divider-color`        | `var(--entities-divider-color, var(--divider-color))` | Color of dividers                    |
-| `--vc-spacing`              | `10px`                                                | Paddings and margins inside the card |
+| Variable                    | Default value                                                          | Description                                         |
+| --------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------- |
+| `--vc-background`           | `var(--ha-card-background, var(--card-background-color, transparent))` | Card background.                                    |
+| `--vc-primary-text-color`   | `var(--primary-text-color)`                                            | Vacuum name, stats values, etc.                     |
+| `--vc-secondary-text-color` | `var(--secondary-text-color)`                                          | Status, stats units and titles, etc.                |
+| `--vc-icon-color`           | `var(--secondary-text-color)`                                          | Colors of icons.                                    |
+| `--vc-toolbar-background`   | `transparent`                                                          | Toolbar background (transparent to avoid stacking). |
+| `--vc-toolbar-text-color`   | `var(--secondary-text-color)`                                          | Color of the toolbar texts.                         |
+| `--vc-toolbar-icon-color`   | `var(--secondary-text-color)`                                          | Color of the toolbar icons.                         |
+| `--vc-divider-color`        | `var(--entities-divider-color, var(--divider-color))`                  | Color of dividers.                                  |
+| `--vc-spacing`              | `10px`                                                                 | Paddings and margins inside the card.               |
 
 ### Styling via theme
 
@@ -246,7 +245,7 @@ If this card works with your vacuum cleaner, please open a PR and your model to 
 - **Roborock** S8 (MaxV Ultra, Ultra Pro), S7 (MaxV), S6 (MaxV, Pure), S5 (Max), S50, S4 (Max), E25, E4, Q5 Pro, Qrevo S
 - **Mijia** Robot Vacuum Cleaner 1C (STYTJ01ZHM)
 - **Xiaomi** Mi Robot (STYJ02YM), Mi Robot 1S, Mi Roborock V1 (SDJQR02RR), Mijia 1C, Mi Robot Vacuum-Mop P, Robot Vacuum E10
-- **Roomba** 670, 675, 676, 697, 960, 980, 981, i3, i7+, e5, S9, s9+, j7, j7+
+- **Roomba** 670, 675, 676, 697, 960, 980, 981, i3, i7+, e5, S9, s9+, j7
 - **Braava** M6
 - **Dyson** 360 Eye
 - **Neato** D7, D6, D4

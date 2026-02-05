@@ -1,5 +1,10 @@
 # Repository Guidelines
 
+## Instructions
+
+- Always refer to `home-assistant-js-websocket` library for types and functions to interact with the Home Assistant API.
+- When interaction with Home Assistant API is needed, use `custom-card-helpers` library for helper utilities for the card lifecycle and events.
+
 ## Project Structure & Module Organization
 
 - `src/`: TypeScript source for the custom Lovelace card (entry: `src/vacuum-card.ts`).
@@ -24,6 +29,23 @@
 - Formatting: Prettier with single quotes (`"singleQuote": true`).
 - Linting: ESLint (see `eslint.config.mjs`) using `@typescript-eslint` and `eslint-plugin-import`.
 - Match existing patterns in `src/` for file naming and exports; prefer descriptive, kebab-case filenames for components.
+
+## Technologies Used
+
+- UI is a Home Assistant Lovelace custom card implemented as a Web Component with Lit (`LitElement`, decorators, `html` templates).
+- Home Assistant integrations use `custom-card-helpers` for card lifecycle/events and `home-assistant-js-websocket` types for entities/services.
+- Template rendering uses `ha-template` for dynamic text in the card.
+- Localization is handled via JSON translation files in `src/translations/` and the `localize` helper.
+- Build tooling is Rollup with TypeScript (`rollup-plugin-typescript2`), Babel transforms, and asset handling for JSON, images, CSS, and SVG.
+- Styling uses PostCSS (`postcss-preset-env`) and `rollup-plugin-postcss-lit` to process component CSS.
+- Production optimizations include HTML literal minification and Terser.
+- Utility helpers include Lodash (`get`).
+- Developer tooling includes ESLint, Prettier, Husky, and lint-staged.
+
+## Documentations
+
+- This card uses the [custom-card-helpers](https://custom-cards.github.io/custom-card-helpers/modules.html) library with helper utilities for the card lifecycle and events. Always refer to the documentation for useful functions and utilities.
+- Use the [home-assistant-js-websocket](https://www.npmjs.com/package/home-assistant-js-websocket) library for types and functions to interact with the Home Assistant API.
 
 ## Testing Guidelines
 

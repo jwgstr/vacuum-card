@@ -1,10 +1,13 @@
-import { CSSResultGroup, LitElement, PropertyValues, html, nothing } from 'lit';
+import { LitElement, html, nothing } from 'lit';
+import type { CSSResultGroup, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import {
   hasConfigOrEntityChanged,
   fireEvent,
   HomeAssistant,
   ServiceCallRequest,
+  computeStateDisplay,
+  stateIcon,
 } from 'custom-card-helpers';
 import registerTemplates from 'ha-template';
 import get from 'lodash/get';
@@ -18,6 +21,7 @@ import {
   VacuumCardBatterySensor,
   VacuumEntity,
   HassEntity,
+  VacuumBatteryEntity,
   VacuumEntityState,
   VacuumServiceCallParams,
   VacuumActionParams,
@@ -76,6 +80,14 @@ export class VacuumCard extends LitElement {
       return null;
     }
     return this.hass.states[this.config.map];
+  }
+
+  get batteryEntity(): VacuumBatteryEntity | null {
+    const batteryEntityId = this.config.battery_entity;
+    if (!this.hass || !batteryEntityId) {
+      return null;
+    }
+    return (this.hass.states[batteryEntityId] as VacuumBatteryEntity) ?? null;
   }
 
   public setConfig(config: VacuumCardConfig): void {
@@ -197,7 +209,7 @@ export class VacuumCard extends LitElement {
         <ha-button-menu @click="${(e: Event) => e.stopPropagation()}">
           <div slot="trigger">
             <ha-icon icon="mdi:fan"></ha-icon>
-            <span class="icon-title">
+            <span class="tip-title">
               ${localize(`source.${source.toLowerCase()}`) || source}
             </span>
           </div>
@@ -217,52 +229,52 @@ export class VacuumCard extends LitElement {
     `;
   }
 
-  private getBatteryValue(): {
-    level: number;
+  private getBatteryDisplay(): {
     icon: string;
-    entity_id?: string;
-  } {
-    let batteryEntity: HassEntity | null = null;
-    let entityId: string = this.config.entity;
+    value: string;
+    entityId: string;
+  } | null {
+    const batteryEntity = this.batteryEntity;
 
-    if (this.config.battery_sensor) {
-      entityId = this.config.battery_sensor.entity_id;
-      batteryEntity = this.hass.states[entityId];
-    }
+    if (batteryEntity) {
+      const value = computeStateDisplay(
+        this.hass.localize,
+        batteryEntity,
+        this.hass.locale,
+      );
+      const icon = stateIcon(batteryEntity) ?? 'mdi:battery';
 
-    // Use vacuum entity's battery_level attribute if a battery_sensor value is not defined/not found
-    if (!batteryEntity) {
-      const { battery_level, battery_icon } = this.getAttributes(this.entity);
       return {
-        level: battery_level || 0,
-        icon: battery_icon || 'mdi:battery-unknown',
-        entity_id: this.config.entity,
+        icon,
+        value,
+        entityId: batteryEntity.entity_id,
       };
     }
 
-    const batteryLevel = parseFloat(batteryEntity.state) || 0;
-    let icon = 'mdi:battery-unknown';
+    const { battery_level, battery_icon } = this.getAttributes(this.entity);
 
-    if (batteryLevel <= 5) {
-      icon = 'mdi:battery-alert';
-    } else if (batteryLevel >= 95) {
-      icon = 'mdi:battery';
-    } else {
-      // Round to nearest 10 between 6-94
-      const rounded = Math.round(batteryLevel / 10) * 10;
-      icon = `mdi:battery-${rounded}`;
+    if (battery_level == null) {
+      return null;
     }
 
-    return { level: batteryLevel, icon, entity_id: entityId };
+    return {
+      icon: battery_icon ?? 'mdi:battery',
+      value: `${battery_level}%`,
+      entityId: this.entity.entity_id,
+    };
   }
 
   private renderBattery(): Template {
-    const { level, icon, entity_id } = this.getBatteryValue();
+    const battery = this.getBatteryDisplay();
+
+    if (!battery) {
+      return nothing;
+    }
 
     return html`
-      <div class="tip" @click="${() => this.handleMore(entity_id)}">
-        <ha-icon icon="${icon}"></ha-icon>
-        <span class="icon-title">${level}%</span>
+      <div class="tip" @click="${() => this.handleMore(battery.entityId)}">
+        <ha-icon icon="${battery.icon}"></ha-icon>
+        <span class="tip-title">${battery.value}</span>
       </div>
     `;
   }
@@ -365,13 +377,12 @@ export class VacuumCard extends LitElement {
 
     return html`
       <div class="status">
+        ${this.requestInProgress
+          ? html`<ha-spinner class="status-spinner" size="tiny"></ha-spinner>`
+          : nothing}
         <span class="status-text" alt=${localizedStatus}>
           ${localizedStatus}
         </span>
-        <ha-circular-progress
-          .indeterminate=${this.requestInProgress}
-          size="small"
-        ></ha-circular-progress>
       </div>
     `;
   }
