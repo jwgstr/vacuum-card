@@ -60,10 +60,6 @@ export interface VacuumCardShortcut {
   target?: HassServiceTarget;
 }
 
-export interface VacuumCardBatterySensor {
-  entity_id: string;
-}
-
 export interface VacuumCardConfig {
   entity: string;
   battery_entity: string;

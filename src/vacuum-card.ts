@@ -18,7 +18,6 @@ import {
   Template,
   VacuumCardAction,
   VacuumCardConfig,
-  VacuumCardBatterySensor,
   VacuumEntity,
   HassEntity,
   VacuumBatteryEntity,
