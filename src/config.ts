@@ -30,6 +30,5 @@ export default function buildConfig(
     stats: config.stats ?? {},
     actions: config.actions ?? {},
     shortcuts: config.shortcuts ?? [],
-    battery_sensor: config.battery_sensor,
   };
 }
