@@ -206,7 +206,7 @@ export class VacuumCard extends LitElement {
 
     return html`
       <div class="tip">
-        <ha-button-menu @click="${(e: Event) => e.stopPropagation()}">
+        <ha-dropdown @click="${(e: Event) => e.stopPropagation()}">
           <div slot="trigger">
             <ha-icon icon="mdi:fan"></ha-icon>
             <span class="tip-title">
@@ -224,7 +224,7 @@ export class VacuumCard extends LitElement {
               </mwc-list-item>
             `,
           )}
-        </ha-button-menu>
+        </ha-dropdown>
       </div>
     `;
   }
