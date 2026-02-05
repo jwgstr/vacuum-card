@@ -73,7 +73,6 @@ export interface VacuumCardConfig {
   stats: Record<string, VacuumCardStat[]>;
   actions: Record<string, VacuumCardAction>;
   shortcuts: VacuumCardShortcut[];
-  battery_sensor?: VacuumCardBatterySensor;
 }
 
 export interface VacuumServiceCallParams {
